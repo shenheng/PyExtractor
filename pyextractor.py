@@ -37,5 +37,6 @@ if __name__=='__main__':
             if f.endswith(".rar") :
                 rarFile=os.path.join(root, f)
                 print("find rar file: %s"%rarFile)
+                #TODO, looking for a free rar library for python
 
     print("DONE, output directory: %s"%outputDir);
