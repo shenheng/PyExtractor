@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
 import sys
 import zipfile
 from os.path import join
@@ -13,18 +14,23 @@ if __name__=='__main__':
     
     #extract input arguments
     inputDir=sys.argv[1];
-    reString=sys.argv[2];
+    conditionString=sys.argv[2];
     outputDir=sys.argv[3];
+
+    #convert condition string to be regular expression
+    reString=conditionString.replace('\\', '\\\\').replace('.', '\\.').replace('*', '.+');
+    print("regular expression: %s"%reString);
+    prog=re.compile(reString);
 
     #list all *.zip
     for root,dirs,files in os.walk(inputDir):
         for f in files:
             if f.endswith(".zip") :
                 zipFile=os.path.join(root, f)
-                print("find zip file: %s"%zipFile)
+                #print("find zip file: %s"%zipFile)
                 sourceZip=zipfile.ZipFile(zipFile, 'r')
                 for name in sourceZip.namelist():
-                    if name.endswith('.abr') :
+                    if prog.match(name):
                         print("find target file: %s"%name);
                         sourceZip.extract(name, outputDir);
                 sourceZip.close();
